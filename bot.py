@@ -161,7 +161,7 @@ class Bot:
             Returns:
                 str: The current location and the next move.
         """
-        depth = 4
+        depth = 3
 
         # move = str(random.choice([_ for _ in self.board.legal_moves]))
         legal_moves = list(self.board.legal_moves)
@@ -291,6 +291,7 @@ class Bot:
 if __name__ == "__main__":
 
     chess_bot = Bot()  # you can enter a FEN here, like Bot("...")
+    chess_bot2 = Bot()
     with game_manager():
 
         """
@@ -307,9 +308,14 @@ if __name__ == "__main__":
 
         while playing:
             if chess_bot.board.turn:
-                chess_bot.board.push_san(test_bot.get_move(chess_bot.board))
+                move = chess_bot2.next_move()
+                chess_bot.board.push_san(move)
+                chess_bot2.board.push_san(move)
             else:
-                chess_bot.board.push_san(chess_bot.next_move())
+                move = chess_bot.next_move()
+                chess_bot.board.push_san(move)
+                chess_bot2.board.push_san(move)
+
             print(chess_bot.board, end="\n\n")
 
             if chess_bot.board.is_game_over():
