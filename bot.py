@@ -23,8 +23,8 @@ import chess
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
-import test_bot
-
+import gui
+import time
 
 @contextmanager
 def game_manager() -> Iterator[None]:
@@ -177,7 +177,7 @@ class Bot:
                 # Otherwise, find a move that doesn't result in stalemate
                 move = self.find_non_stalemate_move(legal_moves, depth)
 
-            print("My move: " + move)
+            print("Move: " + move)
             print("score: " + str(self.evaluate_pos(self.board)))
             print("positions evaluated: " + str(self.count))
             self.count = 0
@@ -289,7 +289,8 @@ class Bot:
 
 
 if __name__ == "__main__":
-
+    gui = gui.Gui()
+    gui.run()
     chess_bot = Bot()  # you can enter a FEN here, like Bot("...")
     chess_bot2 = Bot()
     with game_manager():
@@ -305,16 +306,21 @@ if __name__ == "__main__":
         """
 
         playing = True
-
+        moveCount = 1
         while playing:
             if chess_bot.board.turn:
+                print("White: Move " + str(moveCount))
                 move = chess_bot2.next_move()
                 chess_bot.board.push_san(move)
                 chess_bot2.board.push_san(move)
+                gui.load_position(chess_bot.board)
             else:
+                print("Black: Move " + str(moveCount))
+                moveCount += 1
                 move = chess_bot.next_move()
                 chess_bot.board.push_san(move)
                 chess_bot2.board.push_san(move)
+                gui.load_position(chess_bot.board)
 
             print(chess_bot.board, end="\n\n")
 
@@ -326,5 +332,5 @@ if __name__ == "__main__":
 
                 # EX: Outcome(termination=<Termination.CHECKMATE: 1>, winner=True)
                 print(chess_bot.board.outcome())
-
+                time.sleep(20)
                 playing = False
